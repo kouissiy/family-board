@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家族ボード</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ec;
+    --warm: #f5e6d0;
+    --brown: #8b6343;
+    --brown-dark: #5c3d1e;
+    --green: #5a7a5a;
+    --green-light: #e8f0e8;
+    --red: #c0392b;
+    --red-light: #fdecea;
+    --blue: #2c5f8a;
+    --blue-light: #e8f0f8;
+    --text: #2d1f0f;
+    --text-light: #7a6550;
+    --shadow: 0 4px 24px rgba(90,60,20,0.10);
+    --radius: 18px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: var(--brown-dark);
+    color: #fff;
+    padding: 18px 24px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  #date-display {
+    font-size: clamp(0.95rem, 3vw, 1.1rem);
+    opacity: 0.88;
+    white-space: nowrap;
+  }
+
+  /* ===== TABS ===== */
+  nav {
+    background: var(--brown);
+    display: flex;
+    gap: 4px;
+    padding: 8px 12px 0;
+    overflow-x: auto;
+  }
+  nav button {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: clamp(0.9rem, 3vw, 1.05rem);
+    font-weight: 500;
+    background: transparent;
+    color: rgba(255,255,255,0.75);
+    border: none;
+    border-radius: 12px 12px 0 0;
+    padding: 10px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  nav button.active {
+    background: var(--cream);
+    color: var(--brown-dark);
+    font-weight: 700;
+  }
+  nav button:hover:not(.active) {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+  }
+
+  /* ===== MAIN ===== */
+  main {
+    padding: clamp(14px, 3vw, 28px);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: clamp(16px, 3vw, 28px);
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.05rem, 3vw, 1.25rem);
+    font-weight: 700;
+    color: var(--brown-dark);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--warm);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ===== MESSAGE ===== */
+  .message-box {
+    background: var(--green-light);
+    border-left: 5px solid var(--green);
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: clamp(1rem, 3vw, 1.15rem);
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+  .message-from {
+    font-size: 0.88rem;
+    color: var(--green);
+    margin-top: 10px;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  /* ===== PHOTO ===== */
+  .photo-area {
+    margin-top: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--warm);
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .photo-area img {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-placeholder {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    padding: 32px;
+    text-align: center;
+  }
+
+  /* ===== CALENDAR ===== */
+  .schedule-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .schedule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--blue-light);
+    font-size: clamp(0.95rem, 3vw, 1.08rem);
+    line-height: 1.5;
+  }
+  .schedule-item .day-badge {
+    background: var(--blue);
+    color: #fff;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    white-space: nowrap;
+    min-width: 44px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .schedule-empty {
+    color: var(--text-light);
+    font-size: 1rem;
+    padding: 16px 0;
+    text-align: center;
+  }
+
+  /* ===== SHOPPING ===== */
+  .shopping-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .shopping-category {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-top: 12px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .shopping-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--warm);
+    cursor: pointer;
+    transition: background 0.18s, transform 0.12s;
+    font-size: clamp(1rem, 3vw, 1.12rem);
+    user-select: none;
+  }
+  .shopping-item:active { transform: scale(0.98); }
+  .shopping-item.checked {
+    background: var(--green-light);
+    text-decoration: line-through;
+    color: var(--text-light);
+  }
+  .check-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2.5px solid var(--brown);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .shopping-item.checked .check-circle {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .check-circle svg { display: none; }
+  .shopping-item.checked .check-circle svg { display: block; }
+
+  /* ===== HELPER ===== */
+  .helper-section {
+    margin-bottom: 20px;
+  }
+  .todo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    background: var(--red-light);
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: clamp(0.95rem, 3vw, 1.05rem);
+    line-height: 1.5;
+    transition: background 0.18s;
+    user-select: none;
+  }
+  .todo-item.done {
+    background: var(--green-light);
+    text-decoration: line-through;
+    color: var(--text-light);
+  }
+  .todo-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2.5px solid var(--red);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .todo-item.done .todo-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .todo-check svg { display: none; }
+  .todo-item.done .todo-check svg { display: block; }
+
+  .memo-box {
+    background: var(--warm);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: clamp(0.95rem, 3vw, 1.05rem);
+    line-height: 1.8;
+    white-space: pre-wrap;
+    min-height: 60px;
+    color: var(--text);
+  }
+
+  .helper-note-input {
+    width: 100%;
+    border: 2px solid var(--warm);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: clamp(0.95rem, 3vw, 1.05rem);
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 100px;
+    background: #fff;
+    color: var(--text);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .helper-note-input:focus { border-color: var(--brown); }
+  .save-btn {
+    margin-top: 10px;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 28px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  .save-btn:hover { background: var(--brown-dark); }
+
+  /* ===== SETTINGS ===== */
+  .settings-form label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 5px;
+    margin-top: 16px;
+  }
+  .settings-form input[type="text"],
+  .settings-form input[type="password"] {
+    width: 100%;
+    border: 2px solid var(--warm);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 1rem;
+    background: #fff;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .settings-form input:focus { border-color: var(--brown); }
+  .settings-hint {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  /* ===== STATUS BAR ===== */
+  #status-bar {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-light);
+    padding: 6px 0 0;
+  }
+  #status-bar.error { color: var(--red); }
+  #status-bar.ok { color: var(--green); }
+
+  /* ===== RELOAD BTN ===== */
+  .reload-btn {
+    display: block;
+    margin: 0 auto 18px;
+    background: var(--brown);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 28px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  .reload-btn:hover { background: var(--brown-dark); }
+
+  /* ===== LOCK SCREEN ===== */
+  #lock-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(30,15,5,0.72);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  #lock-screen.show { display: flex; }
+  .lock-box {
+    background: var(--cream);
+    border-radius: 18px;
+    padding: 36px 32px;
+    width: min(380px, 90vw);
+    text-align: center;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.3);
+  }
+  .lock-box h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.25rem;
+    color: var(--brown-dark);
+    margin-bottom: 20px;
+  }
+  .lock-box input {
+    width: 100%;
+    border: 2px solid var(--warm);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 1.1rem;
+    text-align: center;
+    letter-spacing: 0.2em;
+    outline: none;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .lock-box input:focus { border-color: var(--brown); }
+  .lock-box button {
+    width: 100%;
+    background: var(--brown-dark);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .lock-error {
+    color: var(--red);
+    font-size: 0.9rem;
+    margin-top: 10px;
+    min-height: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Lock screen for settings tab -->
+<div id="lock-screen">
+  <div class="lock-box">
+    <h2>🔒 管理画面</h2>
+    <input type="password" id="pw-input" placeholder="パスワード" maxlength="20">
+    <button onclick="checkPassword()">入る</button>
+    <button onclick="closeLock()" style="background:var(--text-light);margin-top:8px;">キャンセル</button>
+    <div class="lock-error" id="lock-error"></div>
+  </div>
+</div>
+
+<header>
+  <h1>🏡 家族ボード</h1>
+  <div id="date-display"></div>
+</header>
+
+<nav>
+  <button class="active" onclick="showTab('home', this)">🏠 ホーム</button>
+  <button onclick="showTab('shopping', this)">🛒 お買い物</button>
+  <button onclick="showTab('helper', this)">🤝 ヘルパーさんへ</button>
+  <button onclick="showTabLocked('settings', this)">⚙️ 設定</button>
+</nav>
+
+<main>
+  <div id="status-bar"></div>
+  <button class="reload-btn" onclick="loadData()">🔄 最新情報を読み込む</button>
+
+  <!-- ===== HOME ===== -->
+  <div class="tab-content active" id="tab-home">
+    <div class="card">
+      <div class="card-title">💬 家族からのメッセージ</div>
+      <div class="message-box" id="msg-text">（メッセージを読み込み中...）</div>
+      <div class="message-from" id="msg-from"></div>
+      <div class="photo-area" id="photo-area">
+        <div class="photo-placeholder">📷 写真はこちらに表示されます</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 今週の予定</div>
+      <ul class="schedule-list" id="schedule-list">
+        <li class="schedule-empty">（予定を読み込み中...）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== SHOPPING ===== -->
+  <div class="tab-content" id="tab-shopping">
+    <div class="card">
+      <div class="card-title">🛒 お買い物リスト</div>
+      <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:14px;">必要なものをタップしてチェック ✓</p>
+      <div class="shopping-grid" id="shopping-list">
+        <div class="schedule-empty">（リストを読み込み中...）</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HELPER ===== -->
+  <div class="tab-content" id="tab-helper">
+    <div class="card">
+      <div class="card-title">📋 今週のお願い・依頼事項</div>
+      <div class="shopping-grid" id="todo-list">
+        <div class="schedule-empty">（読み込み中...）</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏥 体調・健康メモ</div>
+      <div class="memo-box" id="health-memo">（読み込み中...）</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📨 前回からの申し送り事項</div>
+      <div class="memo-box" id="handover-memo">（読み込み中...）</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📝 本日の様子（ヘルパーさん記入欄）</div>
+      <textarea class="helper-note-input" id="helper-note" placeholder="本日の両親の様子をご記入ください..."></textarea>
+      <button class="save-btn" onclick="saveHelperNote()">💾 保存する</button>
+    </div>
+  </div>
+
+  <!-- ===== SETTINGS ===== -->
+  <div class="tab-content" id="tab-settings">
+    <div class="card">
+      <div class="card-title">⚙️ スプレッドシート設定</div>
+      <div class="settings-form">
+        <label>Google スプレッドシート 公開URL（CSV形式）</label>
+        <input type="text" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv">
+        <div class="settings-hint">
+          スプレッドシートを「リンクを知っている全員が閲覧可能」に設定し、<br>
+          「ファイル → 共有 → ウェブに公開」でCSV形式のURLを取得してください。
+        </div>
+
+        <label style="margin-top:24px;">管理画面パスワード（現在のパスワードを変更）</label>
+        <input type="password" id="new-pw" placeholder="新しいパスワードを入力">
+
+        <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="save-btn" onclick="saveSettings()">💾 設定を保存</button>
+          <button class="save-btn" style="background:var(--text-light);" onclick="clearChecks()">チェックをリセット</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 スプレッドシートの書き方</div>
+      <div style="font-size:0.9rem;line-height:1.9;color:var(--text);">
+        <strong>シート1（データ）に以下の形式で入力：</strong><br><br>
+        A列：項目名　B列：内容<br><br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">message</code> → 家族からのメッセージ本文<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">message_from</code> → 差出人（例：こういちより）<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">photo_url</code> → 写真のURL（Google ドライブ共有リンク等）<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">schedule_月</code> → 月曜の予定<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">schedule_火</code> → 火曜の予定（ヘルパーさん来訪など）<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">schedule_水</code>〜<code style="background:var(--warm);padding:2px 6px;border-radius:5px;">schedule_日</code> → 各曜日の予定<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">shop_食品_牛乳</code> → 食品カテゴリの「牛乳」（shop_カテゴリ_品名）<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">todo_薬の確認をする</code> → ヘルパーさんへのTODO<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">health</code> → 体調・健康メモ<br>
+        <code style="background:var(--warm);padding:2px 6px;border-radius:5px;">handover</code> → 前回からの申し送り事項<br>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ===== STATE =====
+let data = {};
+let shoppingChecked = JSON.parse(localStorage.getItem('shopping_checked') || '{}');
+let todoChecked = JSON.parse(localStorage.getItem('todo_checked') || '{}');
+let helperNote = localStorage.getItem('helper_note') || '';
+let settings = JSON.parse(localStorage.getItem('family_settings') || '{"url":"","pw":"0000"}');
+let settingsUnlocked = false;
+
+// ===== DATE =====
+function updateDate() {
+  const now = new Date();
+  const days = ['日','月','火','水','木','金','土'];
+  const s = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（${days[now.getDay()]}）`;
+  document.getElementById('date-display').textContent = s;
+}
+updateDate();
+setInterval(updateDate, 60000);
+
+// ===== TABS =====
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function showTabLocked(id, btn) {
+  if (settingsUnlocked) {
+    showTab(id, btn);
+    document.getElementById('sheet-url').value = settings.url || '';
+  } else {
+    document.getElementById('lock-screen').classList.add('show');
+    document.getElementById('pw-input').value = '';
+    document.getElementById('lock-error').textContent = '';
+    document.getElementById('pw-input').focus();
+    // store pending tab
+    window._pendingTab = { id, btn };
+  }
+}
+
+function checkPassword() {
+  const val = document.getElementById('pw-input').value;
+  if (val === (settings.pw || '0000')) {
+    settingsUnlocked = true;
+    document.getElementById('lock-screen').classList.remove('show');
+    if (window._pendingTab) {
+      showTab(window._pendingTab.id, window._pendingTab.btn);
+      document.getElementById('sheet-url').value = settings.url || '';
+    }
+  } else {
+    document.getElementById('lock-error').textContent = 'パスワードが違います';
+  }
+}
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
+function closeLock() { document.getElementById('lock-screen').classList.remove('show'); }
+
+// ===== LOAD DATA =====
+async function loadData() {
+  setStatus('読み込み中...', '');
+  if (!settings.url) {
+    setStatus('設定画面でスプレッドシートのURLを設定してください', 'error');
+    loadDemo();
+    return;
+  }
+  try {
+    const resp = await fetch(settings.url);
+    if (!resp.ok) throw new Error('fetch failed');
+    const text = await resp.text();
+    parseCSV(text);
+    setStatus('✅ ' + new Date().toLocaleTimeString('ja-JP') + ' 更新済み', 'ok');
+  } catch(e) {
+    setStatus('⚠️ 読み込みに失敗しました。デモデータを表示しています', 'error');
+    loadDemo();
+  }
+}
+
+function parseCSV(text) {
+  const rows = text.trim().split('\n').map(r => r.split(',').map(c => c.replace(/^"|"$/g,'').trim()));
+  data = {};
+  rows.forEach(r => { if (r[0]) data[r[0].trim()] = r[1] ? r[1].trim() : ''; });
+  renderAll();
+}
+
+function loadDemo() {
+  data = {
+    message: 'お父さん、お母さん、元気ですか？\n今週末に顔を出しに行くね！\nいつも体に気をつけてね😊',
+    message_from: 'こういちより',
+    photo_url: '',
+    'schedule_月': '',
+    'schedule_火': 'ヘルパーさん来訪 10:00〜12:00',
+    'schedule_水': '病院 内科 14:00',
+    'schedule_木': '',
+    'schedule_金': 'デイサービス 9:00〜16:00',
+    'schedule_土': '',
+    'schedule_日': '',
+    'shop_食品_牛乳': '1',
+    'shop_食品_卵': '1',
+    'shop_食品_パン': '1',
+    'shop_日用品_ティッシュ': '1',
+    'shop_日用品_トイレットペーパー': '1',
+    'todo_薬の残量を確認してください': '1',
+    'todo_冷蔵庫の期限切れ食品を確認してください': '1',
+    'todo_ゴミ出し（燃えるゴミ）': '1',
+    health: '血圧は安定しています。\n水分をこまめに取るよう声かけをお願いします。',
+    handover: '先週は体調良好でした。\n木曜日に少し頭痛があったようです。'
+  };
+  renderAll();
+}
+
+function renderAll() {
+  renderMessage();
+  renderSchedule();
+  renderShopping();
+  renderHelper();
+}
+
+// ===== RENDER MESSAGE =====
+function renderMessage() {
+  document.getElementById('msg-text').textContent = data.message || '（メッセージはありません）';
+  const from = data.message_from;
+  document.getElementById('msg-from').textContent = from ? `― ${from}` : '';
+  const photoArea = document.getElementById('photo-area');
+  const url = data.photo_url;
+  if (url) {
+    photoArea.innerHTML = `<img src="${url}" alt="家族の写真" onerror="this.parentElement.innerHTML='<div class=photo-placeholder>📷 写真を読み込めませんでした</div>'">`;
+  } else {
+    photoArea.innerHTML = '<div class="photo-placeholder">📷 写真はこちらに表示されます</div>';
+  }
+}
+
+// ===== RENDER SCHEDULE =====
+function renderSchedule() {
+  const days = ['月','火','水','木','金','土','日'];
+  const ul = document.getElementById('schedule-list');
+  const items = days.map(d => ({ day: d, text: data[`schedule_${d}`] || '' })).filter(i => i.text);
+  if (!items.length) {
+    ul.innerHTML = '<li class="schedule-empty">今週の予定はありません</li>';
+    return;
+  }
+  ul.innerHTML = items.map(i => `
+    <li class="schedule-item">
+      <span class="day-badge">${i.day}曜</span>
+      <span>${i.text}</span>
+    </li>
+  `).join('');
+}
+
+// ===== RENDER SHOPPING =====
+function renderShopping() {
+  const shopKeys = Object.keys(data).filter(k => k.startsWith('shop_'));
+  const grid = document.getElementById('shopping-list');
+  if (!shopKeys.length) {
+    grid.innerHTML = '<div class="schedule-empty">お買い物リストはありません</div>';
+    return;
+  }
+  // Group by category
+  const cats = {};
+  shopKeys.forEach(k => {
+    const parts = k.split('_');
+    const cat = parts[1] || 'その他';
+    const name = parts.slice(2).join('_') || parts[1];
+    if (!cats[cat]) cats[cat] = [];
+    cats[cat].push({ key: k, name });
+  });
+  let html = '';
+  Object.entries(cats).forEach(([cat, items]) => {
+    html += `<div class="shopping-category">${cat}</div>`;
+    items.forEach(({ key, name }) => {
+      const checked = shoppingChecked[key] ? 'checked' : '';
+      html += `
+        <div class="shopping-item ${checked}" onclick="toggleShop('${key}', this)">
+          <div class="check-circle">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <polyline points="2,7 6,11 12,3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span>${name}</span>
+        </div>`;
+    });
+  });
+  grid.innerHTML = html;
+}
+
+function toggleShop(key, el) {
+  el.classList.toggle('checked');
+  shoppingChecked[key] = el.classList.contains('checked');
+  localStorage.setItem('shopping_checked', JSON.stringify(shoppingChecked));
+}
+
+// ===== RENDER HELPER =====
+function renderHelper() {
+  // TODO list
+  const todoKeys = Object.keys(data).filter(k => k.startsWith('todo_'));
+  const todoDiv = document.getElementById('todo-list');
+  if (!todoKeys.length) {
+    todoDiv.innerHTML = '<div class="schedule-empty">依頼事項はありません</div>';
+  } else {
+    todoDiv.innerHTML = todoKeys.map(k => {
+      const text = k.replace(/^todo_/, '');
+      const done = todoChecked[k] ? 'done' : '';
+      return `
+        <div class="todo-item ${done}" onclick="toggleTodo('${k}', this)">
+          <div class="todo-check">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <polyline points="1,6 5,10 11,2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span>${text}</span>
+        </div>`;
+    }).join('');
+  }
+  // Memos
+  document.getElementById('health-memo').textContent = data.health || '（記載なし）';
+  document.getElementById('handover-memo').textContent = data.handover || '（記載なし）';
+  // Helper note
+  document.getElementById('helper-note').value = localStorage.getItem('helper_note') || '';
+}
+
+function toggleTodo(key, el) {
+  el.classList.toggle('done');
+  todoChecked[key] = el.classList.contains('done');
+  localStorage.setItem('todo_checked', JSON.stringify(todoChecked));
+}
+
+function saveHelperNote() {
+  const note = document.getElementById('helper-note').value;
+  localStorage.setItem('helper_note', note);
+  const btn = document.querySelector('#tab-helper .save-btn');
+  btn.textContent = '✅ 保存しました';
+  setTimeout(() => btn.textContent = '💾 保存する', 2000);
+}
+
+// ===== SETTINGS =====
+function saveSettings() {
+  const url = document.getElementById('sheet-url').value.trim();
+  const pw = document.getElementById('new-pw').value.trim();
+  settings.url = url;
+  if (pw) settings.pw = pw;
+  localStorage.setItem('family_settings', JSON.stringify(settings));
+  const btn = document.querySelector('#tab-settings .save-btn');
+  btn.textContent = '✅ 保存しました';
+  setTimeout(() => btn.textContent = '💾 設定を保存', 2000);
+}
+
+function clearChecks() {
+  shoppingChecked = {};
+  todoChecked = {};
+  localStorage.setItem('shopping_checked', '{}');
+  localStorage.setItem('todo_checked', '{}');
+  renderShopping();
+  renderHelper();
+  alert('チェックをリセットしました');
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status-bar');
+  el.textContent = msg;
+  el.className = type;
+}
+
+// ===== INIT =====
+loadData();
+</script>
+</body>
+</html>
