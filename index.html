@@ -638,8 +638,10 @@ async function loadData() {
     loadDemo();
     return;
   }
+  // CORSを回避するためプロキシ経由で取得
+  const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(settings.url);
   try {
-    const resp = await fetch(settings.url);
+    const resp = await fetch(proxyUrl);
     if (!resp.ok) throw new Error('fetch failed');
     const text = await resp.text();
     parseCSV(text);
