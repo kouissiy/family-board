@@ -994,11 +994,12 @@ async function loadIssues() {
   const container = document.getElementById("album");
 
   issues.forEach(issue => {
-    // 本文から画像URLを探す
-  
-const match = issue.body.match(/https:\/\/[^\s)]+/);
+    if (!issue.body) return;
+
+    const match = issue.body.match(/!\[.*?\]\((https:\/\/.*?)\)/);
+
     if (match) {
-      const imgUrl = match[0];
+      const imgUrl = match[1];
 
       const div = document.createElement("div");
       div.style.marginBottom = "20px";
@@ -1006,7 +1007,6 @@ const match = issue.body.match(/https:\/\/[^\s)]+/);
       div.innerHTML = `
         <h3>${issue.title}</h3>
         <img src="${imgUrl}" style="max-width:100%; border-radius:10px;">
-        <p>${new Date(issue.created_at).toLocaleString()}</p>
       `;
 
       container.appendChild(div);
