@@ -995,8 +995,8 @@ async function loadIssues() {
 
   issues.forEach(issue => {
     // 本文から画像URLを探す
-    const match = issue.body.match(/https:\/\/user-images\.githubusercontent\.com\/[^\s)]+/);
-
+  
+const match = issue.body.match(/https:\/\/[^\s)]+/);
     if (match) {
       const imgUrl = match[0];
 
