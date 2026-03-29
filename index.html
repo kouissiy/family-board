@@ -53,7 +53,6 @@ header h1 {
   font-weight: 700;
 }
 .header-right { display: flex; align-items: center; gap: 8px; }
-#date-display { font-size: clamp(0.75rem, 3vw, 0.9rem); opacity: 0.8; }
 .hdr-btn {
   background: rgba(255,255,255,0.15); border: none; border-radius: 50%;
   width: 34px; height: 34px; font-size: 1rem; color: #fff; cursor: pointer;
@@ -62,6 +61,35 @@ header h1 {
 }
 .hdr-btn:hover { background: rgba(255,255,255,0.3); }
 .hdr-btn.unlocked { background: var(--green); }
+
+/* ===== DATE BANNER ===== */
+#date-banner {
+  background: linear-gradient(135deg, var(--brown-dark) 0%, #7a4e2a 100%);
+  color: #fff;
+  text-align: center;
+  padding: 14px 14px 18px;
+  border-bottom: 3px solid rgba(255,255,255,0.10);
+}
+#date-banner .date-year {
+  font-size: clamp(0.78rem, 3vw, 0.95rem);
+  opacity: 0.72;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+#date-banner .date-main {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(2rem, 9vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+}
+#date-banner .date-day {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  opacity: 0.88;
+  margin-top: 4px;
+  letter-spacing: 0.12em;
+}
 
 /* ===== STATUS ===== */
 #status-bar {
@@ -93,6 +121,49 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
   display: flex; align-items: center; gap: 8px;
 }
 
+/* ===== APP MENU ===== */
+.app-section-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(0.82rem, 3vw, 0.92rem);
+  color: var(--text-light);
+  margin-bottom: 10px;
+  padding-left: 2px;
+  letter-spacing: 0.05em;
+}
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.app-tile {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 8px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.12s, box-shadow 0.12s;
+  min-height: 88px;
+  gap: 7px;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.app-tile:active { transform: scale(0.92); box-shadow: 0 2px 8px rgba(90,60,20,0.08); }
+.app-tile .app-icon { font-size: 2rem; line-height: 1; }
+.app-tile .app-name {
+  font-size: clamp(0.7rem, 2.5vw, 0.82rem);
+  font-weight: 700;
+  text-align: center;
+  color: var(--brown-dark);
+  line-height: 1.3;
+  word-break: break-all;
+}
+
 /* ===== MESSAGE ===== */
 .message-box {
   background: var(--green-light); border-left: 4px solid var(--green);
@@ -105,15 +176,6 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
   text-align: right; font-weight: 500;
 }
 
-/* ===== PHOTO ===== */
-.photo-area {
-  margin-top: 14px; border-radius: 12px; overflow: hidden;
-  background: var(--warm); min-height: 90px;
-  display: flex; align-items: center; justify-content: center;
-}
-.photo-area img { width: 100%; max-height: 300px; object-fit: cover; display: block; }
-.photo-placeholder { color: var(--text-light); font-size: 0.9rem; padding: 26px; text-align: center; }
-
 /* ===== SCHEDULE ===== */
 .schedule-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .schedule-item {
@@ -121,11 +183,16 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
   padding: 12px 14px; border-radius: 12px; background: var(--blue-light);
   font-size: clamp(0.93rem, 3vw, 1.05rem); line-height: 1.5;
 }
+.schedule-item.today-item {
+  background: var(--green-light);
+  border-left: 3px solid var(--green);
+}
 .day-badge {
   background: var(--blue); color: #fff; border-radius: 8px;
   padding: 3px 10px; font-size: 0.84rem; font-weight: 700;
   white-space: nowrap; flex-shrink: 0;
 }
+.day-badge.today-badge { background: var(--green); }
 .list-empty { color: var(--text-light); font-size: 0.93rem; padding: 14px 0; text-align: center; }
 
 /* ===== SHOPPING ===== */
@@ -142,7 +209,7 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
   transition: background 0.15s, transform 0.1s;
 }
 .shopping-item:active { transform: scale(0.98); }
-.shopping-item.checked { background: var(--green-light); text-decoration: line-through; color: var(--text-light); }
+.shopping-item.checked { background: var(--green-light); color: var(--text-light); }
 .chk-circle {
   width: 30px; height: 30px; border-radius: 50%;
   border: 2.5px solid var(--brown); flex-shrink: 0;
@@ -267,35 +334,21 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
 }
 .ata:focus { border-color: var(--brown); background: #fff; }
 
-.photo-upload {
-  border: 2.5px dashed var(--brown); border-radius: 12px;
-  padding: 18px; text-align: center; cursor: pointer;
-  background: var(--cream); transition: background 0.2s; position: relative;
-}
-.photo-upload:hover { background: var(--warm); }
-.photo-upload input[type="file"] {
-  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-}
-#photo-preview { width: 100%; max-height: 190px; object-fit: cover; border-radius: 10px; display: none; margin-bottom: 8px; }
-.pu-icon { font-size: 1.9rem; line-height: 1; }
-.pu-text { color: var(--brown); font-size: 0.88rem; font-weight: 700; margin-top: 5px; }
-.pu-sub { color: var(--text-light); font-size: 0.75rem; margin-top: 3px; }
-#photo-uploading { color: var(--green); font-size: 0.83rem; margin-top: 7px; display: none; }
-
 .sch-grid { display: flex; flex-direction: column; gap: 8px; }
 .sch-row { display: flex; align-items: center; gap: 10px; }
 .day-lbl {
   background: var(--blue); color: #fff; border-radius: 8px;
-  padding: 8px 9px; font-size: 0.85rem; font-weight: 700;
-  min-width: 42px; text-align: center; flex-shrink: 0;
+  padding: 8px 9px; font-size: 0.78rem; font-weight: 700;
+  min-width: 60px; text-align: center; flex-shrink: 0;
 }
+.day-lbl.today-lbl { background: var(--green); }
 
 .dyn-list { display: flex; flex-direction: column; gap: 5px; }
 .dyn-item {
   display: flex; align-items: center; gap: 8px;
   background: var(--warm); border-radius: 10px; padding: 8px 10px;
 }
-.dyn-item-inner { flex: 1; }
+.dyn-item-inner { flex: 1; min-width: 0; }
 .dyn-cat { font-size: 0.74rem; color: var(--text-light); line-height: 1.2; }
 .dyn-name { font-size: 0.93rem; }
 .del-btn {
@@ -314,6 +367,11 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
   padding: 9px 14px; font-family: 'Noto Sans JP', sans-serif;
   font-size: 0.93rem; font-weight: 700; cursor: pointer; white-space: nowrap;
 }
+
+/* アプリ管理アイテム */
+.app-dyn-icon { font-size: 1.3rem; flex-shrink: 0; width: 28px; text-align: center; }
+.app-dyn-name { font-size: 0.93rem; font-weight: 700; }
+.app-dyn-url { font-size: 0.72rem; color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .adm-save-btn {
   background: var(--brown-dark); color: #fff; border: none; border-radius: 14px;
@@ -422,31 +480,56 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
 </head>
 <body>
 
+<!-- null-origin (data: URL) detection banner -->
+<div id="null-origin-banner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:9999;background:#5c3d1e;color:#fff;padding:10px 16px;font-size:0.85rem;line-height:1.5;text-align:center;">
+  ⚠️ このアプリはローカルファイルとして開かれているため、写真の読み込みができません。<br>
+  <a id="null-origin-link" href="#" style="color:#ffd580;font-weight:bold;text-decoration:underline;" target="_blank">🌐 GitHub Pages版を開く</a>（ブックマークに追加すると便利です）
+</div>
+<script>
+(function(){
+  var PAGES_URL = 'https://kouissiy.github.io/family-board/';
+  if (location.origin === 'null' || location.protocol === 'data:') {
+    var b = document.getElementById('null-origin-banner');
+    var l = document.getElementById('null-origin-link');
+    if (b) b.style.display = 'block';
+    if (l) l.href = PAGES_URL;
+    // push down body content
+    document.body.style.paddingTop = '56px';
+  }
+})();
+</script>
+
 <header>
   <h1>🏡 家族ボード</h1>
   <div class="header-right">
-    <div id="date-display"></div>
     <button class="hdr-btn" onclick="loadData()" title="更新">🔄</button>
     <button class="hdr-btn" id="admin-btn" onclick="openAdmin()" title="管理">⚙️</button>
   </div>
 </header>
+
+<!-- 大きな日付バナー -->
+<div id="date-banner">
+  <div class="date-year" id="banner-year"></div>
+  <div class="date-main" id="banner-date"></div>
+  <div class="date-day"  id="banner-day"></div>
+</div>
+
 <div id="status-bar">読み込み中...</div>
 
 <main>
-  <!-- HOME -->
+  <!-- HOME: アプリランチャー -->
   <div class="tab-content active" id="tab-home">
+    <div class="app-section-title">📱 アプリを起動</div>
+    <div class="app-grid" id="app-grid"></div>
+  </div>
+
+  <!-- SCHEDULE: 家族メッセージ＋予定（実日付） -->
+  <div class="tab-content" id="tab-schedule">
     <div class="card">
       <div class="card-title">💬 家族からのメッセージ</div>
       <div class="message-box" id="msg-text">（読み込み中...）</div>
       <div class="message-from" id="msg-from"></div>
-      <div class="photo-area" id="photo-area">
-        <div class="photo-placeholder">📷 写真はこちらに表示されます</div>
-      </div>
     </div>
-  </div>
-
-  <!-- SCHEDULE -->
-  <div class="tab-content" id="tab-schedule">
     <div class="card">
       <div class="card-title">📅 今週の予定</div>
       <ul class="schedule-list" id="schedule-list">
@@ -458,8 +541,7 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
   <!-- SHOPPING -->
   <div class="tab-content" id="tab-shopping">
     <div class="card">
-      <div class="card-title">🛒 お買い物リスト</div>
-      <p style="font-size:0.83rem;color:var(--text-light);margin-bottom:10px;">買ったらタップしてチェック ✓</p>
+      <div class="card-title">🛒 買ってきてほしいもの</div>
       <div id="shopping-list"><div class="list-empty">読み込み中...</div></div>
     </div>
   </div>
@@ -522,52 +604,35 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
   </div>
   <div class="adm-content">
 
+    <!-- メッセージ -->
     <div class="adm-sec">
       <div class="adm-sec-hdr" onclick="toggleSec(this)">
-        <span>📨 メッセージ・写真</span><span class="arr">▼</span>
+        <span>💬 家族からのメッセージ</span><span class="arr">▼</span>
       </div>
       <div class="adm-sec-body">
         <label class="al">メッセージ本文</label>
         <textarea class="ata" id="adm-message" rows="4" placeholder="家族へのメッセージを入力..."></textarea>
         <label class="al">差出人</label>
         <input type="text" class="ai" id="adm-from" placeholder="例：こういちより">
-        <label class="al">写真</label>
-        <div class="photo-upload" id="photo-upload-wrap">
-          <input type="file" accept="image/*" id="photo-input" onchange="handlePhoto(event)">
-          <img id="photo-preview" alt="プレビュー">
-          <div id="pu-content">
-            <div class="pu-icon">📷</div>
-            <div class="pu-text">タップして写真を選ぶ</div>
-            <div class="pu-sub">カメラまたはアルバムから選択できます</div>
-          </div>
-          <div id="photo-uploading">⬆️ アップロード中...</div>
-        </div>
-        <div id="photo-change-hint" style="font-size:0.77rem;color:var(--text-light);margin-top:6px;display:none;">
-          📌 現在の写真が設定されています。上のエリアをタップすると変更できます。
-        </div>
       </div>
     </div>
 
+    <!-- 予定 -->
     <div class="adm-sec">
       <div class="adm-sec-hdr" onclick="toggleSec(this)">
         <span>📅 今週の予定</span><span class="arr">▼</span>
       </div>
       <div class="adm-sec-body">
-        <div class="sch-grid">
-          <div class="sch-row"><div class="day-lbl">月</div><input type="text" class="ai" id="adm-sch-月" placeholder="予定があれば入力"></div>
-          <div class="sch-row"><div class="day-lbl">火</div><input type="text" class="ai" id="adm-sch-火" placeholder="予定があれば入力"></div>
-          <div class="sch-row"><div class="day-lbl">水</div><input type="text" class="ai" id="adm-sch-水" placeholder="予定があれば入力"></div>
-          <div class="sch-row"><div class="day-lbl">木</div><input type="text" class="ai" id="adm-sch-木" placeholder="予定があれば入力"></div>
-          <div class="sch-row"><div class="day-lbl">金</div><input type="text" class="ai" id="adm-sch-金" placeholder="予定があれば入力"></div>
-          <div class="sch-row"><div class="day-lbl">土</div><input type="text" class="ai" id="adm-sch-土" placeholder="予定があれば入力"></div>
-          <div class="sch-row"><div class="day-lbl">日</div><input type="text" class="ai" id="adm-sch-日" placeholder="予定があれば入力"></div>
+        <div class="sch-grid" id="adm-sch-grid">
+          <!-- JS で日付入りラベルを描画 -->
         </div>
       </div>
     </div>
 
+    <!-- 買い物 -->
     <div class="adm-sec">
       <div class="adm-sec-hdr" onclick="toggleSec(this)">
-        <span>🛒 お買い物リスト</span><span class="arr">▼</span>
+        <span>🛒 買ってきてほしいもの</span><span class="arr">▼</span>
       </div>
       <div class="adm-sec-body">
         <div class="dyn-list" id="adm-shop-list"></div>
@@ -579,6 +644,7 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
       </div>
     </div>
 
+    <!-- ヘルパー -->
     <div class="adm-sec">
       <div class="adm-sec-hdr" onclick="toggleSec(this)">
         <span>🤝 ヘルパーへのメモ</span><span class="arr">▼</span>
@@ -597,19 +663,42 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
       </div>
     </div>
 
+    <!-- アプリメニュー管理 -->
+    <div class="adm-sec">
+      <div class="adm-sec-hdr" onclick="toggleSec(this)">
+        <span>📱 ホームのアプリメニュー</span><span class="arr">▼</span>
+      </div>
+      <div class="adm-sec-body">
+        <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:10px;">ホーム画面に表示するアプリを管理できます。</p>
+        <div class="dyn-list" id="adm-app-list"></div>
+        <div class="add-row" style="margin-top:12px;">
+          <input type="text" id="new-app-icon" placeholder="絵文字" style="max-width:58px;text-align:center;font-size:1.2rem;">
+          <input type="text" id="new-app-name" placeholder="アプリ名" style="max-width:90px;">
+          <input type="url"  id="new-app-url"  placeholder="URL（https://...）" style="flex:2;min-width:130px;">
+          <button class="add-btn" onclick="addApp()">＋</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 設定 -->
     <div class="adm-sec">
       <div class="adm-sec-hdr closed" onclick="toggleSec(this)">
         <span>⚙️ 設定</span><span class="arr">▼</span>
       </div>
       <div class="adm-sec-body hidden">
-        <label class="al">Google Apps Script の URL</label>
+        <label class="al">GitHub リポジトリ名（アルバム用）</label>
+        <input type="text" class="ai" id="adm-album-repo" placeholder="例：username/family-board">
+        <label class="al" style="margin-top:12px;">GitHub トークン（非公開リポジトリの場合）</label>
+        <input type="password" class="ai" id="adm-github-token" placeholder="ghp_xxxxxxxxx（任意）" autocomplete="off">
+        <p style="font-size:0.76rem;color:var(--text-light);margin-top:4px;">公開リポジトリなら不要です。Settings → Developer settings → Personal access tokens で発行できます。</p>
+        <label class="al" style="margin-top:16px;">Google Apps Script の URL</label>
         <input type="url" class="ai" id="adm-gas-url">
         <label class="al" style="margin-top:16px;">管理パスワードを変更</label>
         <input type="password" class="ai" id="adm-new-pw" placeholder="新しいパスワード（変更する場合のみ）" autocomplete="new-password">
         <p style="font-size:0.76rem;color:var(--text-light);margin-top:5px;">初期パスワード：0000</p>
         <div style="margin-top:16px;padding:12px;background:var(--warm);border-radius:10px;">
           <button onclick="resetChecks()" style="background:none;border:none;color:var(--brown);font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;cursor:pointer;text-decoration:underline;">
-            🔄 お買い物・TODOのチェックをリセット
+            🔄 買い物・TODOのチェックをリセット
           </button>
         </div>
       </div>
@@ -640,30 +729,68 @@ main { padding: clamp(10px, 3vw, 22px); max-width: 620px; margin: 0 auto; }
 <div id="toast"></div>
 
 <script>
-// ===== GAS URL（固定設定） =====
+// ===== GAS URL =====
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwfnJH4e02B9untZU8FtWlIepZEuhq_xM7UpUEpCmCGndTje5m867dphWEW_LI1oPMr/exec';
+
+// ===== デフォルトアプリ =====
+const DEFAULT_APPS = [
+  { icon: '🔍', name: 'Google',  url: 'https://www.google.co.jp' },
+  { icon: '▶️', name: 'YouTube', url: 'https://www.youtube.com'  },
+  { icon: '🌤', name: '天気',     url: 'https://tenki.jp'         },
+  { icon: '📦', name: 'Amazon',  url: 'https://www.amazon.co.jp' },
+  { icon: '📰', name: 'Yahoo!',  url: 'https://www.yahoo.co.jp'  },
+  { icon: '📺', name: 'NHK',     url: 'https://www.nhk.or.jp'    },
+];
 
 // ===== STATE =====
 let cfg = JSON.parse(localStorage.getItem('fboard_cfg') || '{}');
-cfg.url = cfg.url || GAS_URL;   // URLを常にGAS_URLにフォールバック
+cfg.url = cfg.url || GAS_URL;
 cfg.pw  = cfg.pw  || '0000';
 
-let appData = {};
+let appData     = {};
 let shopChecked = JSON.parse(localStorage.getItem('fboard_shop') || '{}');
 let todoChecked = JSON.parse(localStorage.getItem('fboard_todo') || '{}');
+let appMenuItems = JSON.parse(localStorage.getItem('fboard_apps') || 'null') || DEFAULT_APPS;
 let adminOpen   = false;
 let adminShops  = [];
 let adminTodos  = [];
-let pendingPhoto    = null;
-let pendingPhotoUrl = null;
+let adminApps   = [];
 
-// ===== DATE =====
+// ===== 日付バナー（大きく表示） =====
 function updateDate() {
-  const d = new Date(), D = ['日','月','火','水','木','金','土'];
-  document.getElementById('date-display').textContent =
-    `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${D[d.getDay()]}）`;
+  const d = new Date();
+  const DAYS = ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'];
+  document.getElementById('banner-year').textContent = `${d.getFullYear()}年`;
+  document.getElementById('banner-date').textContent = `${d.getMonth()+1}月${d.getDate()}日`;
+  document.getElementById('banner-day').textContent  = DAYS[d.getDay()];
 }
-updateDate(); setInterval(updateDate, 60000);
+updateDate();
+setInterval(updateDate, 60000);
+
+// ===== 今週の実日付を計算 =====
+// { 月: {m:3, d:24, isToday:false}, 火: {...}, ... }
+function getWeekDates() {
+  const today = new Date();
+  const dow   = today.getDay(); // 0=日, 1=月, ..., 6=土
+  const kanji = ['月','火','水','木','金','土','日'];
+  // 今週の月曜日を求める (日曜の場合は-6日, それ以外は 1-dow 日)
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + (dow === 0 ? -6 : 1 - dow));
+
+  const result = {};
+  kanji.forEach((k, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    result[k] = {
+      m: d.getMonth() + 1,
+      d: d.getDate(),
+      isToday: d.getFullYear() === today.getFullYear() &&
+               d.getMonth()    === today.getMonth()    &&
+               d.getDate()     === today.getDate()
+    };
+  });
+  return result;
+}
 
 // ===== TABS =====
 function showTab(id, btn) {
@@ -680,10 +807,23 @@ async function loadData() {
     const r = await fetch(cfg.url + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
     appData = await r.json();
+    // GAS から取得できたらローカルにもキャッシュ
+    localStorage.setItem('fboard_data', JSON.stringify(appData));
     renderAll();
     setStatus('✅ ' + new Date().toLocaleTimeString('ja-JP') + ' 更新済み', 'ok');
   } catch(e) {
-    setStatus('⚠️ 読み込みに失敗しました（デモ表示中）', 'error');
+    // ローカル保存データがあればそちらを使う
+    const local = localStorage.getItem('fboard_data');
+    if (local) {
+      try {
+        appData = JSON.parse(local);
+        renderAll();
+        setStatus('📱 ローカルデータを表示中（GAS未接続）', 'error');
+        return;
+      } catch(_) {}
+    }
+    // ローカルデータもなければデモ表示
+    setStatus('⚠️ データなし（デモ表示中）', 'error');
     demoData();
   }
 }
@@ -693,7 +833,6 @@ function demoData() {
   appData = {
     message: 'お父さん、お母さん、元気ですか？\n今週末に顔を出しに行くね！\nいつも体に気をつけてね😊',
     message_from: 'こういちより',
-    photo_url: '',
     schedule_月: '', schedule_火: 'ヘルパーさん来訪 10:00〜12:00',
     schedule_水: '病院 内科 14:00', schedule_木: '',
     schedule_金: 'デイサービス 9:00〜16:00', schedule_土: '', schedule_日: '',
@@ -707,33 +846,62 @@ function demoData() {
 }
 
 // ===== RENDER =====
-function renderAll() { renderHome(); renderSchedule(); renderShopping(); renderHelper(); }
+function renderAll() {
+  renderHome();
+  renderSchedule();
+  renderShopping();
+  renderHelper();
+}
 
+// ===== HOME: アプリメニュー =====
 function renderHome() {
+  const grid = document.getElementById('app-grid');
+  if (!appMenuItems.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--text-light);font-size:0.88rem;padding:30px 0;">⚙️ 管理画面からアプリを追加できます</div>';
+    return;
+  }
+  grid.innerHTML = appMenuItems.map(app =>
+    `<a class="app-tile" href="${esc(app.url)}" target="_blank" rel="noopener noreferrer">
+      <span class="app-icon">${app.icon}</span>
+      <span class="app-name">${esc(app.name)}</span>
+    </a>`
+  ).join('');
+}
+
+// ===== SCHEDULE: メッセージ＋予定（実日付で表示） =====
+function renderSchedule() {
+  // メッセージ
   document.getElementById('msg-text').textContent = appData.message || '（メッセージはありません）';
   document.getElementById('msg-from').textContent = appData.message_from ? `― ${appData.message_from}` : '';
-  const pa = document.getElementById('photo-area');
-  if (appData.photo_url) {
-    pa.innerHTML = `<img src="${esc(appData.photo_url)}" alt="家族の写真"
-      onerror="this.parentElement.innerHTML='<div class=\\'photo-placeholder\\'>写真を読み込めませんでした</div>'">`;
-  } else {
-    pa.innerHTML = '<div class="photo-placeholder">📷 写真はこちらに表示されます</div>';
-  }
-}
 
-function renderSchedule() {
+  // 予定（今週の実日付を付与）
+  const weekDates = getWeekDates();
   const days = ['月','火','水','木','金','土','日'];
-  const ul = document.getElementById('schedule-list');
-  const items = days.map(d => ({d, t: appData['schedule_' + d] || ''})).filter(i => i.t);
-  ul.innerHTML = items.length
-    ? items.map(i => `<li class="schedule-item"><span class="day-badge">${i.d}曜</span><span>${esc(i.t)}</span></li>`).join('')
-    : '<li class="list-empty">今週の予定はありません</li>';
+  const ul   = document.getElementById('schedule-list');
+  const items = days
+    .map(d => ({ d, t: appData['schedule_' + d] || '', info: weekDates[d] }))
+    .filter(i => i.t);
+
+  if (!items.length) {
+    ul.innerHTML = '<li class="list-empty">今週の予定はありません</li>';
+    return;
+  }
+  ul.innerHTML = items.map(i => {
+    const label      = `${i.info.m}/${i.info.d}(${i.d})`;
+    const rowClass   = i.info.isToday ? ' today-item'  : '';
+    const badgeClass = i.info.isToday ? ' today-badge' : '';
+    return `<li class="schedule-item${rowClass}">
+      <span class="day-badge${badgeClass}">${label}</span>
+      <span>${esc(i.t)}</span>
+    </li>`;
+  }).join('');
 }
 
+// ===== SHOPPING =====
 function renderShopping() {
   const keys = Object.keys(appData).filter(k => k.startsWith('shop_'));
   const grid = document.getElementById('shopping-list');
-  if (!keys.length) { grid.innerHTML = '<div class="list-empty">お買い物リストはありません</div>'; return; }
+  if (!keys.length) { grid.innerHTML = '<div class="list-empty">リストはありません</div>'; return; }
   const cats = {};
   keys.forEach(k => {
     const [,cat,...rest] = k.split('_');
@@ -772,9 +940,11 @@ document.addEventListener('click', e => {
     const i = parseInt(db.dataset.i);
     if (db.dataset.del === 'shop') { adminShops.splice(i, 1); renderAdmShops(); }
     if (db.dataset.del === 'todo') { adminTodos.splice(i, 1); renderAdmTodos(); }
+    if (db.dataset.del === 'app')  { adminApps.splice(i, 1);  renderAdmApps();  }
   }
 });
 
+// ===== HELPER =====
 function renderHelper() {
   const todoKeys = Object.keys(appData).filter(k => k.startsWith('todo_'));
   document.getElementById('todo-list').innerHTML = todoKeys.length
@@ -786,8 +956,8 @@ function renderHelper() {
           </svg></div><span>${esc(text)}</span></div>`;
       }).join('')
     : '<div class="list-empty">依頼事項はありません</div>';
-  document.getElementById('health-memo').textContent   = appData.health    || '（記載なし）';
-  document.getElementById('handover-memo').textContent = appData.handover  || '（記載なし）';
+  document.getElementById('health-memo').textContent   = appData.health   || '（記載なし）';
+  document.getElementById('handover-memo').textContent = appData.handover || '（記載なし）';
   document.getElementById('helper-note').value = localStorage.getItem('fboard_helper_note') || '';
 }
 
@@ -843,34 +1013,36 @@ function populateAdmin() {
   document.getElementById('adm-from').value     = appData.message_from || '';
   document.getElementById('adm-health').value   = appData.health       || '';
   document.getElementById('adm-handover').value = appData.handover     || '';
-  document.getElementById('adm-gas-url').value  = cfg.url;
+  document.getElementById('adm-gas-url').value       = cfg.url;
+  document.getElementById('adm-album-repo').value   = cfg.albumRepo    || 'kouissiy/family-board';
+  document.getElementById('adm-github-token').value = cfg.githubToken  || '';
   document.getElementById('adm-new-pw').value   = '';
   document.getElementById('adm-status').textContent = '';
 
-  const prev  = document.getElementById('photo-preview');
-  const puCon = document.getElementById('pu-content');
-  const hint  = document.getElementById('photo-change-hint');
-  pendingPhoto = null; pendingPhotoUrl = null;
-  if (appData.photo_url) {
-    prev.src = appData.photo_url; prev.style.display = 'block';
-    puCon.style.display = 'none'; hint.style.display = 'block';
-  } else {
-    prev.style.display = 'none'; puCon.style.display = 'block'; hint.style.display = 'none';
-  }
-
-  ['月','火','水','木','金','土','日'].forEach(d => {
-    const el = document.getElementById('adm-sch-' + d);
-    if (el) el.value = appData['schedule_' + d] || '';
-  });
+  // 予定グリッド（日付入りラベルで描画）
+  const weekDates = getWeekDates();
+  const days = ['月','火','水','木','金','土','日'];
+  document.getElementById('adm-sch-grid').innerHTML = days.map(d => {
+    const info  = weekDates[d];
+    const label = `${info.m}/${info.d}(${d})`;
+    const cls   = info.isToday ? ' today-lbl' : '';
+    return `<div class="sch-row">
+      <div class="day-lbl${cls}">${label}</div>
+      <input type="text" class="ai" id="adm-sch-${d}" placeholder="予定があれば入力" value="${esc(appData['schedule_' + d] || '')}">
+    </div>`;
+  }).join('');
 
   adminShops = Object.keys(appData).filter(k => k.startsWith('shop_')).map(k => {
     const [,cat,...rest] = k.split('_');
-    return {cat: cat || 'その他', name: rest.join('_') || cat};
+    return { cat: cat || 'その他', name: rest.join('_') || cat };
   });
   renderAdmShops();
 
   adminTodos = Object.keys(appData).filter(k => k.startsWith('todo_')).map(k => k.replace(/^todo_/, ''));
   renderAdmTodos();
+
+  adminApps = JSON.parse(JSON.stringify(appMenuItems));
+  renderAdmApps();
 }
 
 function renderAdmShops() {
@@ -891,12 +1063,26 @@ function renderAdmTodos() {
     : '<div class="list-empty" style="text-align:left;padding:6px 0;font-size:0.88rem;">まだお願いがありません</div>';
 }
 
+function renderAdmApps() {
+  const c = document.getElementById('adm-app-list');
+  c.innerHTML = adminApps.length
+    ? adminApps.map((app, i) => `<div class="dyn-item">
+        <div class="app-dyn-icon">${app.icon}</div>
+        <div class="dyn-item-inner">
+          <div class="app-dyn-name">${esc(app.name)}</div>
+          <div class="app-dyn-url">${esc(app.url)}</div>
+        </div>
+        <button class="del-btn" data-del="app" data-i="${i}">✕</button>
+      </div>`).join('')
+    : '<div class="list-empty" style="text-align:left;padding:6px 0;font-size:0.88rem;">アプリがありません</div>';
+}
+
 function addShop() {
   const cat  = document.getElementById('new-shop-cat').value.trim() || 'その他';
   const name = document.getElementById('new-shop-name').value.trim();
   if (!name) { showToast('品名を入力してください', 'err'); return; }
   adminShops.push({cat, name});
-  document.getElementById('new-shop-cat').value = '';
+  document.getElementById('new-shop-cat').value  = '';
   document.getElementById('new-shop-name').value = '';
   renderAdmShops();
 }
@@ -907,48 +1093,23 @@ function addTodo() {
   document.getElementById('new-todo').value = '';
   renderAdmTodos();
 }
+function addApp() {
+  const icon = document.getElementById('new-app-icon').value.trim() || '🔗';
+  const name = document.getElementById('new-app-name').value.trim();
+  let   url  = document.getElementById('new-app-url').value.trim();
+  if (!name) { showToast('アプリ名を入力してください', 'err'); return; }
+  if (!url)  { showToast('URLを入力してください', 'err');   return; }
+  if (!url.startsWith('http')) url = 'https://' + url;
+  adminApps.push({icon, name, url});
+  document.getElementById('new-app-icon').value = '';
+  document.getElementById('new-app-name').value = '';
+  document.getElementById('new-app-url').value  = '';
+  renderAdmApps();
+}
+
 document.getElementById('new-shop-name').addEventListener('keydown', e => { if (e.key === 'Enter') addShop(); });
 document.getElementById('new-todo').addEventListener('keydown',      e => { if (e.key === 'Enter') addTodo(); });
-
-// ===== PHOTO =====
-function handlePhoto(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const fr = new FileReader();
-  fr.onload = ev => {
-    pendingPhotoUrl = ev.target.result;
-    const prev = document.getElementById('photo-preview');
-    prev.src = pendingPhotoUrl; prev.style.display = 'block';
-    document.getElementById('pu-content').style.display = 'none';
-    document.getElementById('photo-change-hint').style.display = 'none';
-  };
-  fr.readAsDataURL(file);
-  compressImage(file).then(r => { pendingPhoto = r; });
-}
-
-function compressImage(file) {
-  return new Promise(resolve => {
-    const r = new FileReader();
-    r.onload = e => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let {width: w, height: h} = img;
-        const MAX = 1200;
-        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        canvas.toBlob(blob => {
-          const r2 = new FileReader();
-          r2.onload = () => resolve({base64: r2.result.split(',')[1], mimeType: 'image/jpeg'});
-          r2.readAsDataURL(blob);
-        }, 'image/jpeg', 0.82);
-      };
-      img.src = e.target.result;
-    };
-    r.readAsDataURL(file);
-  });
-}
+document.getElementById('new-app-url').addEventListener('keydown',   e => { if (e.key === 'Enter') addApp();  });
 
 // ===== SAVE ADMIN =====
 async function saveAdmin() {
@@ -956,55 +1117,63 @@ async function saveAdmin() {
   const sta = document.getElementById('adm-status');
   btn.disabled = true; btn.textContent = '保存中...'; sta.textContent = '';
 
-  const newUrl = document.getElementById('adm-gas-url').value.trim() || GAS_URL;
+  const newUrl        = document.getElementById('adm-gas-url').value.trim() || GAS_URL;
+  const newAlbumRepo  = document.getElementById('adm-album-repo').value.trim() || 'kouissiy/family-board';
+  const newGithubToken = document.getElementById('adm-github-token').value.trim();
   const newPw  = document.getElementById('adm-new-pw').value.trim();
   const oldPw  = cfg.pw;
 
   if (newPw) cfg.pw = newPw;
-  cfg.url = newUrl;
+  cfg.url          = newUrl;
+  cfg.albumRepo    = newAlbumRepo;
+  if (newGithubToken) cfg.githubToken = newGithubToken;
   localStorage.setItem('fboard_cfg', JSON.stringify(cfg));
+  albumLoaded = false; // リポジトリ変更時に再読み込みできるよう
+
+  // アプリメニューはローカルに保存して即時反映
+  appMenuItems = JSON.parse(JSON.stringify(adminApps));
+  localStorage.setItem('fboard_apps', JSON.stringify(appMenuItems));
+  renderHome();
 
   const nd = {
     message:        document.getElementById('adm-message').value,
     message_from:   document.getElementById('adm-from').value,
     health:         document.getElementById('adm-health').value,
     handover:       document.getElementById('adm-handover').value,
+    photo_url:      appData.photo_url || '',
     __replace_shop: '1',
     __replace_todo: '1'
   };
-  ['月','火','水','木','金','土','日'].forEach(d => {
-    nd['schedule_' + d] = document.getElementById('adm-sch-' + d).value || '';
+  const days = ['月','火','水','木','金','土','日'];
+  days.forEach(d => {
+    const el = document.getElementById('adm-sch-' + d);
+    nd['schedule_' + d] = el ? el.value : '';
   });
   adminShops.forEach(({cat, name}) => { nd[`shop_${cat}_${name}`] = '1'; });
   adminTodos.forEach(t => { nd[`todo_${t}`] = '1'; });
 
-  try {
-    if (pendingPhoto) {
-      sta.textContent = '📷 写真をアップロード中...';
-      document.getElementById('photo-uploading').style.display = 'block';
-      const pr = await gasPost({action: 'upload_photo', pw: oldPw, base64: pendingPhoto.base64, mimeType: pendingPhoto.mimeType});
-      document.getElementById('photo-uploading').style.display = 'none';
-      if (pr.url) nd.photo_url = pr.url;
-    } else {
-      nd.photo_url = appData.photo_url || '';
-    }
+  // ── ローカルへは必ず保存 ──
+  appData = Object.assign({}, appData, nd);
+  localStorage.setItem('fboard_data', JSON.stringify(appData));
+  renderAll();
 
+  // ── GAS へも同期を試みる ──
+  try {
     if (newPw) {
       sta.textContent = '🔑 パスワードを更新中...';
       await gasPost({action: 'set_password', pw: oldPw, new_pw: newPw});
     }
-
-    sta.textContent = '💾 データを保存中...';
+    sta.textContent = '☁️ クラウドに保存中...';
     await gasPost({action: 'save', pw: cfg.pw, data: nd});
-
     sta.textContent = '🔄 最新データを読み込み中...';
     await loadData();
     showToast('✅ 保存しました', 'ok');
-    closeAdmin();
   } catch(e) {
-    sta.textContent = '❌ ' + (e.message || '保存に失敗しました');
-    showToast('⚠️ 保存に失敗しました', 'err');
+    // GAS失敗でもローカルは保存済みなので成功扱い
+    setStatus('📱 ローカルデータを表示中（GAS未接続）', 'error');
+    showToast('📱 ローカルに保存しました', 'ok');
   }
+  closeAdmin();
   btn.disabled = false; btn.textContent = '💾 保存する';
 }
 
@@ -1043,46 +1212,76 @@ function esc(s) {
 }
 
 // ===== ALBUM =====
-const ALBUM_REPO = 'kouissiy/family-board';
-let albumData = [];
+let albumData   = [];
 let albumLoaded = false;
+
+function getAlbumRepo()  { return cfg.albumRepo  || 'kouissiy/family-board'; }
+function getGithubToken(){ return cfg.githubToken || ''; }
+
+function githubHeaders() {
+  const token = getGithubToken();
+  return token ? { Authorization: 'Bearer ' + token } : {};
+}
 
 function extractImages(text) {
   if (!text) return [];
-  const imgs = [];
-  const mdPat = /!\[.*?\]\((https?:\/\/[^\)\s]+)\)/g;
+  const imgs   = [];
+  const mdPat  = /!\[.*?\]\((https?:\/\/[^\)\s]+)\)/g;
   const rawPat = /https:\/\/github\.com\/user-attachments\/assets\/[\w\-]+/g;
   let m;
-  while ((m = mdPat.exec(text)) !== null) imgs.push(m[1]);
+  while ((m = mdPat.exec(text))  !== null) imgs.push(m[1]);
   while ((m = rawPat.exec(text)) !== null) { if (!imgs.includes(m[0])) imgs.push(m[0]); }
   return imgs;
 }
 
 async function loadAlbum() {
-  if (albumLoaded) return;
+  albumLoaded = false;
   const el = document.getElementById('album-grid');
-  el.innerHTML = '<div class="list-empty" style="grid-column:1/-1;">読み込み中...</div>';
+  const repo = getAlbumRepo();
+  const setInfo = (msg) => { el.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:16px;font-size:0.85rem;">${msg}</div>`; };
+  setInfo('📷 読み込み中...');
   try {
-    const r = await fetch(`https://api.github.com/repos/${ALBUM_REPO}/issues?state=open&per_page=100`);
+    setInfo(`📡 GitHub API 呼び出し中... (${repo})`);
+    const r = await fetch(
+      `https://api.github.com/repos/${repo}/issues?state=open&per_page=100`,
+      { headers: githubHeaders() }
+    );
+    if (r.status === 401 || r.status === 403) throw new Error('認証エラー（トークンを設定してください）');
+    if (r.status === 404) throw new Error('リポジトリが見つかりません（設定を確認してください）');
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const issues = await r.json();
+    if (!Array.isArray(issues)) throw new Error('API応答が不正: ' + JSON.stringify(issues).slice(0,80));
+    setInfo(`✅ ${issues.length}件のIssue取得完了 → 写真を抽出中...`);
     albumData = [];
     for (const issue of issues) {
       const date = issue.created_at.slice(0, 10);
       for (const url of extractImages(issue.body || '')) albumData.push({url, title: issue.title, date});
       if (issue.comments > 0) {
-        const cr = await fetch(`https://api.github.com/repos/${ALBUM_REPO}/issues/${issue.number}/comments`);
-        const comments = await cr.json();
-        for (const c of comments) {
-          const cd = c.created_at.slice(0, 10);
-          for (const url of extractImages(c.body || '')) albumData.push({url, title: issue.title, date: cd});
-        }
+        try {
+          const cr = await fetch(
+            `https://api.github.com/repos/${repo}/issues/${issue.number}/comments`,
+            { headers: githubHeaders() }
+          );
+          if (cr.ok) {
+            const comments = await cr.json();
+            if (Array.isArray(comments)) {
+              for (const c of comments) {
+                const cd = c.created_at.slice(0, 10);
+                for (const url of extractImages(c.body || '')) albumData.push({url, title: issue.title, date: cd});
+              }
+            }
+          }
+        } catch(ce) { /* コメント取得失敗は無視 */ }
       }
     }
     albumLoaded = true;
     renderAlbum();
   } catch(e) {
-    el.innerHTML = '<div class="list-empty" style="grid-column:1/-1;">写真の読み込みに失敗しました</div>';
+    el.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px 14px;">
+      <div style="font-size:2rem;margin-bottom:8px;">📷</div>
+      <div style="color:var(--red);font-size:0.88rem;margin-bottom:14px;">${e.message}</div>
+      <button onclick="loadAlbum()" style="background:var(--brown);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-family:'Noto Sans JP',sans-serif;font-size:0.9rem;cursor:pointer;">🔄 再読み込み</button>
+    </div>`;
   }
 }
 
@@ -1092,10 +1291,12 @@ function renderAlbum() {
     el.innerHTML = '<div class="list-empty" style="grid-column:1/-1;">写真がありません</div>';
     return;
   }
-  el.innerHTML = albumData.map((p, i) =>
+  const count = albumData.length;
+  el.innerHTML = `<div style="grid-column:1/-1;font-size:0.78rem;color:var(--text-light);padding:2px 0 6px 2px;">📷 ${count}枚</div>`
+    + albumData.map((p, i) =>
     `<div class="album-item" onclick="openLightbox(${i})">
-      <img src="${esc(p.url)}" alt="${esc(p.title)}" loading="lazy"
-        onerror="this.parentElement.style.display='none'">
+      <img src="${esc(p.url)}" alt="${esc(p.title)}"
+        onerror="this.style.display='none';this.nextElementSibling.style.paddingTop='20px';">
       <div class="album-caption">${esc(p.title)}<br>
         <span style="opacity:0.72;font-size:0.65rem;">${esc(p.date)}</span></div>
     </div>`
